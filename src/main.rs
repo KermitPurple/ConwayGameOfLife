@@ -1,7 +1,10 @@
 use ggez::{graphics, Context, ContextBuilder, GameResult};
-use ggez::event::{self, EventHandler};
+use ggez::event::{self, EventHandler, KeyCode};
 use ggez::nalgebra as na;
 use ggez::graphics::Drawable;
+use ggez::input::keyboard;
+use rand::prelude::*;
+
 
 fn main() {
     const SIZE: [i32; 2] = [600, 600];
@@ -29,6 +32,11 @@ fn main() {
         .build()
         .expect("Could not create context");
     let mut game = ConwaysGame::new(SIZE, SCALE);
+    for i in 0..60_usize{
+        for j in 0..60_usize{
+            game.board[i][j] = rand::random();
+        }
+    }
     ggez::timer::yield_now();
     match event::run(&mut ctx, &mut event_loop, &mut game) {
         Ok(_) => println!("Success"),
@@ -115,7 +123,6 @@ impl ConwaysGame {
 
 impl EventHandler for ConwaysGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        ggez::timer::sleep(std::time::Duration::from_millis(200));
         self.update_board();
         Ok(())
     }
