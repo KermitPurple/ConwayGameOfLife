@@ -132,7 +132,9 @@ impl ConwaysGame {
 
 impl EventHandler for ConwaysGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        self.update_board();
+        if keyboard::is_key_pressed(_ctx, KeyCode::Space){
+            self.update_board();
+        }
         if keyboard::is_key_pressed(_ctx, KeyCode::R) {
             self.randomize_board();
         }
