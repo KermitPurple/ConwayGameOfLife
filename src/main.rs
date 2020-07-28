@@ -32,11 +32,6 @@ fn main() {
         .build()
         .expect("Could not create context");
     let mut game = ConwaysGame::new(SIZE, SCALE);
-    for i in 0..60_usize{
-        for j in 0..60_usize{
-            game.board[i][j] = rand::random();
-        }
-    }
     ggez::timer::yield_now();
     match event::run(&mut ctx, &mut event_loop, &mut game) {
         Ok(_) => println!("Success"),
@@ -56,6 +51,14 @@ impl ConwaysGame {
             size: size,
             scale: scale,
             board: vec![vec![false; (size[0] / scale) as usize]; (size[1] / scale) as usize],
+        }
+    }
+
+    fn randomize_board(&mut self){
+        for i in 0..((self.size[0] / self.scale) as usize) {
+            for j in 0..((self.size[1] / self.scale) as usize) {
+                self.board[i][j] = rand::random();
+            }
         }
     }
 
@@ -124,6 +127,9 @@ impl ConwaysGame {
 impl EventHandler for ConwaysGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
         self.update_board();
+        if keyboard::is_key_pressed(_ctx, KeyCode::R) {
+            self.randomize_board();
+        }
         Ok(())
     }
 
