@@ -29,7 +29,7 @@ fn main() {
         .build()
         .expect("Could not create context");
     let mut game = ConwaysGame::new(SIZE, SCALE);
-    game.board[0][0] = true;
+    ggez::timer::yield_now();
     match event::run(&mut ctx, &mut event_loop, &mut game) {
         Ok(_) => println!("Success"),
         Err(e) => println!("Failure: {}", e)
@@ -115,9 +115,8 @@ impl ConwaysGame {
 
 impl EventHandler for ConwaysGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        while(ggez::timer::check_update_time(_ctx, 60)) {
-            self.update_board();
-        }
+        ggez::timer::sleep(std::time::Duration::from_millis(200));
+        self.update_board();
         Ok(())
     }
 
