@@ -134,6 +134,14 @@ impl ConwaysGame {
         let j: usize = position[0] as usize / self.scale as usize;
         self.board[i][j] = !self.board[i][j];
     }
+
+    fn clear_board(&mut self){
+        for i in 0..(self.size[1] / self.scale){
+            for j in 0..(self.size[0] / self.scale){
+                self.board[i as usize][j as usize] = false;
+            }
+        }
+    }
 }
 
 impl EventHandler for ConwaysGame {
@@ -143,6 +151,9 @@ impl EventHandler for ConwaysGame {
         }
         if keyboard::is_key_pressed(_ctx, KeyCode::R) {
             self.randomize_board();
+        }
+        if keyboard::is_key_pressed(_ctx, KeyCode::C){
+            self.clear_board();
         }
         if mouse::button_pressed(_ctx, mouse::MouseButton::Left) {
             let position = mouse::position(_ctx);
