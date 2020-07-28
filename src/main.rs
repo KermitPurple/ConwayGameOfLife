@@ -122,6 +122,12 @@ impl ConwaysGame {
             }
         }
     }
+
+    fn toggle_at_click(&mut self, position: [f32; 2]){
+        let i: usize = position[1] as usize / self.scale as usize;
+        let j: usize = position[0] as usize / self.scale as usize;
+        self.board[i][j] = !self.board[i][j];
+    }
 }
 
 impl EventHandler for ConwaysGame {
@@ -131,7 +137,8 @@ impl EventHandler for ConwaysGame {
             self.randomize_board();
         }
         if mouse::button_pressed(_ctx, mouse::MouseButton::Left) {
-            println!("Test");
+            let position = mouse::position(_ctx);
+            self.toggle_at_click([position.x, position.y]);
         }
         Ok(())
     }
