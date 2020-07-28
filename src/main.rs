@@ -2,7 +2,7 @@ use ggez::{graphics, Context, ContextBuilder, GameResult};
 use ggez::event::{self, EventHandler, KeyCode};
 use ggez::nalgebra as na;
 use ggez::graphics::Drawable;
-use ggez::input::keyboard;
+use ggez::input::{keyboard, mouse};
 use rand::prelude::*;
 
 
@@ -129,6 +129,9 @@ impl EventHandler for ConwaysGame {
         self.update_board();
         if keyboard::is_key_pressed(_ctx, KeyCode::R) {
             self.randomize_board();
+        }
+        if mouse::button_pressed(_ctx, mouse::MouseButton::Left) {
+            println!("Test");
         }
         Ok(())
     }
