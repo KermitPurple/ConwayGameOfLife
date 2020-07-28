@@ -91,9 +91,15 @@ impl ConwaysGame {
     }
 
     fn update_board(&mut self){
+        let mut counts = vec![vec![0; (self.size[0] / self.scale) as usize]; (self.size[1] / self.scale) as usize];
         for i in 0..(self.size[1] / self.scale){
             for j in 0..(self.size[0] / self.scale){
-                self.act_on_count(i as usize, j as usize, self.count_neighbors(i, j));
+                counts[i as usize][j as usize] = self.count_neighbors(i, j);
+            }
+        }
+        for i in 0..(self.size[1] / self.scale){
+            for j in 0..(self.size[0] / self.scale){
+                self.act_on_count(i as usize, j as usize, counts[i as usize][j as usize]);
             }
         }
     }
