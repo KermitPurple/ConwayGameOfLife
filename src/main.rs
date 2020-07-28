@@ -1,6 +1,7 @@
 use ggez::{graphics, Context, ContextBuilder, GameResult};
 use ggez::event::{self, EventHandler};
 use ggez::nalgebra as na;
+use ggez::graphics::Drawable;
 
 fn main() {
     const SIZE: [i32; 2] = [600, 600];
@@ -28,6 +29,7 @@ fn main() {
         .build()
         .expect("Could not create context");
     let mut game = ConwaysGame::new(SIZE, SCALE);
+    game.board[0][0] = true;
     match event::run(&mut ctx, &mut event_loop, &mut game) {
         Ok(_) => println!("Success"),
         Err(e) => println!("Failure: {}", e)
@@ -78,9 +80,34 @@ impl ConwaysGame {
     }
 
     fn update_board(&mut self){
-        for i in 0..(self.size[0] / self.scale){
-            for j in 0..(self.size[1] / self.scale){
+        for i in 0..(self.size[1] / self.scale){
+            for j in 0..(self.size[0] / self.scale){
                 self.act_on_count(i as usize, j as usize, self.count_neighbors(i, j));
+            }
+        }
+    }
+
+    fn print_board(&self, ctx: &mut Context){
+        for i in 0..(self.size[1] / self.scale){
+            for j in 0..(self.size[0] / self.scale){
+                if self.board[i as usize][j as usize] {
+                    let rectangle = graphics::Mesh::new_rectangle(
+                        ctx,
+                        graphics::DrawMode::fill(),
+                        graphics::Rect {
+                            x: j as f32 * self.scale as f32,
+                            y: i as f32 * self.scale as f32,
+                            w: self.scale as f32,
+                            h: self.scale as f32,
+                        },
+                        graphics::BLACK,
+                        ).unwrap();
+                    graphics::draw(
+                        ctx,
+                        &rectangle,
+                        graphics::DrawParam::default().dest(na::Point2::new(0.0, 0.0)),
+                        );
+                }
             }
         }
     }
@@ -88,12 +115,15 @@ impl ConwaysGame {
 
 impl EventHandler for ConwaysGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
-        self.update_board();
+        while(ggez::timer::check_update_time(_ctx, 60)) {
+            self.update_board();
+        }
         Ok(())
     }
 
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::WHITE);
+        self.print_board(ctx);
         graphics::present(ctx);
         Ok(())
     }
