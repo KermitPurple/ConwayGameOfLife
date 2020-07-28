@@ -55,20 +55,32 @@ impl ConwaysGame {
             i += y;
             for mut j in -1..=1{
                 j += x;
-                if (i != y || j != x) && i >= 0 && i < self.size[1] && j >= 0 && j < self.size[0] && self.board[i as usize][j as usize]{
-                    count += 1;
+                if (i != y || j != x) && i >= 0 && i < self.size[1] / self.scale && j >= 0 && j < self.size[0] / self.scale{
+                    if self.board[i as usize][j as usize] {
+                        count += 1;
+                    }
                 }
             }
         }
         count
     }
 
+    fn act_on_count(&mut self, i: usize, j: usize, count: i32){
+        if self.board[i][j] {
+            if count < 2 || count > 3{
+                self.board[i][j] = false;
+            }
+        } else {
+            if count == 3 {
+                self.board[i][j] = true;
+            }
+        }
+    }
+
     fn update_board(&mut self){
         for i in 0..(self.size[0] / self.scale){
             for j in 0..(self.size[1] / self.scale){
-                if self.board[i as usize][j as usize] {
-                    println!("{}", self.count_neighbors(i, j));
-                }
+                self.act_on_count(i as usize, j as usize, self.count_neighbors(i, j));
             }
         }
     }
