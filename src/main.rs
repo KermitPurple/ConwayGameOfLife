@@ -5,7 +5,7 @@ use ggez::nalgebra as na;
 fn main() {
     const SIZE: [i32; 2] = [600, 600];
     const SCALE: i32 = 10;
-    let (mut ctx, mut event_loop) = ContextBuilder::new("Conway's game of life", "Shane")
+    let (mut ctx, mut event_loop) = ContextBuilder::new("Conway's game of life", "Shane McDonough")
         .window_setup(ggez::conf::WindowSetup {
             title: "Conway's Game of life".to_owned(),
             samples: ggez::conf::NumSamples::Zero,
@@ -27,9 +27,7 @@ fn main() {
         })
         .build()
         .expect("Could not create context");
-
     let mut game = ConwaysGame::new(SIZE, SCALE);
-
     match event::run(&mut ctx, &mut event_loop, &mut game) {
         Ok(_) => println!("Success"),
         Err(e) => println!("Failure: {}", e)
@@ -47,13 +45,38 @@ impl ConwaysGame {
         Self {
             size: size,
             scale: scale,
-            board: vec![vec![false; size[0] as usize]; size[1] as usize],
+            board: vec![vec![false; (size[0] / scale) as usize]; (size[1] / scale) as usize],
+        }
+    }
+
+    fn count_neighbors(&self, y: i32, x: i32) -> i32{
+        let mut count: i32 = 0;
+        for mut i in -1..=1{
+            i += y;
+            for mut j in -1..=1{
+                j += x;
+                if (i != y || j != x) && i >= 0 && i < self.size[1] && j >= 0 && j < self.size[0] && self.board[i as usize][j as usize]{
+                    count += 1;
+                }
+            }
+        }
+        count
+    }
+
+    fn update_board(&mut self){
+        for i in 0..(self.size[0] / self.scale){
+            for j in 0..(self.size[1] / self.scale){
+                if self.board[i as usize][j as usize] {
+                    println!("{}", self.count_neighbors(i, j));
+                }
+            }
         }
     }
 }
 
 impl EventHandler for ConwaysGame {
     fn update(&mut self, _ctx: &mut Context) -> GameResult {
+        self.update_board();
         Ok(())
     }
 
