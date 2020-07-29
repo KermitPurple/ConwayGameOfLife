@@ -5,8 +5,8 @@ use ggez::input::{keyboard, mouse};
 
 
 fn main() {
-    const SIZE: [i32; 2] = [600, 600];
-    const SCALE: i32 = 10;
+    const SIZE: [i32; 2] = [1000, 600];
+    const SCALE: i32 = 5;
     let (mut ctx, mut event_loop) = ContextBuilder::new("Conway's game of life", "Shane McDonough")
         .window_setup(ggez::conf::WindowSetup {
             title: "Conway's Game of life".to_owned(),
@@ -53,8 +53,8 @@ impl ConwaysGame {
     }
 
     fn randomize_board(&mut self){
-        for i in 0..((self.size[0] / self.scale) as usize) {
-            for j in 0..((self.size[1] / self.scale) as usize) {
+        for i in 0..((self.size[1] / self.scale) as usize) {
+            for j in 0..((self.size[0] / self.scale) as usize) {
                 self.board[i][j] = rand::random();
             }
         }
