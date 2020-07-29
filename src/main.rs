@@ -1,9 +1,7 @@
 use ggez::{graphics, Context, ContextBuilder, GameResult};
 use ggez::event::{self, EventHandler, KeyCode};
 use ggez::nalgebra as na;
-use ggez::graphics::Drawable;
 use ggez::input::{keyboard, mouse};
-use rand::prelude::*;
 
 
 fn main() {
