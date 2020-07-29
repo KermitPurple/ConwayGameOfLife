@@ -128,11 +128,15 @@ impl ConwaysGame {
     }
 
     fn toggle_on_at_click(&mut self, position: [f32; 2]){
-        self.board[position[1] as usize / self.scale as usize][position[0] as usize / self.scale as usize] = true;
+        if position[0] >= 0. && position[1] >= 0. && position[0] < self.size[0] as f32 && position[1] < self.size[1] as f32 {
+            self.board[position[1] as usize / self.scale as usize][position[0] as usize / self.scale as usize] = true;
+        }
     }
 
     fn toggle_off_at_click(&mut self, position: [f32; 2]){
-        self.board[position[1] as usize / self.scale as usize][position[0] as usize / self.scale as usize] = false;
+        if position[0] >= 0. && position[1] >= 0. && position[0] < self.size[0] as f32 && position[1] < self.size[1] as f32 {
+            self.board[position[1] as usize / self.scale as usize][position[0] as usize / self.scale as usize] = false;
+        }
     }
 
     fn clear_board(&mut self){
