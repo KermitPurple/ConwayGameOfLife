@@ -103,34 +103,36 @@ impl ConwaysGame {
     }
 
     fn print_board(&self, ctx: &mut Context){
+        let rectangle = graphics::Mesh::new_rectangle(
+            ctx,
+            graphics::DrawMode::fill(),
+            graphics::Rect {
+                x: 0_f32,
+                y: 0_f32,
+                w: self.scale as f32,
+                h: self.scale as f32,
+            },
+            graphics::BLACK,
+            ).unwrap();
         for i in 0..(self.size[1] / self.scale){
             for j in 0..(self.size[0] / self.scale){
                 if self.board[i as usize][j as usize] {
-                    let rectangle = graphics::Mesh::new_rectangle(
-                        ctx,
-                        graphics::DrawMode::fill(),
-                        graphics::Rect {
-                            x: j as f32 * self.scale as f32,
-                            y: i as f32 * self.scale as f32,
-                            w: self.scale as f32,
-                            h: self.scale as f32,
-                        },
-                        graphics::BLACK,
-                        ).unwrap();
                     graphics::draw(
                         ctx,
                         &rectangle,
-                        graphics::DrawParam::default().dest(na::Point2::new(0.0, 0.0)),
+                        graphics::DrawParam::default().dest(na::Point2::new((j * self.scale) as f32, (i * self.scale) as f32)),
                         ).unwrap();
                 }
             }
         }
     }
 
-    fn toggle_at_click(&mut self, position: [f32; 2]){
-        let i: usize = position[1] as usize / self.scale as usize;
-        let j: usize = position[0] as usize / self.scale as usize;
-        self.board[i][j] = !self.board[i][j];
+    fn toggle_on_at_click(&mut self, position: [f32; 2]){
+        self.board[position[1] as usize / self.scale as usize][position[0] as usize / self.scale as usize] = true;
+    }
+
+    fn toggle_off_at_click(&mut self, position: [f32; 2]){
+        self.board[position[1] as usize / self.scale as usize][position[0] as usize / self.scale as usize] = false;
     }
 
     fn clear_board(&mut self){
@@ -155,7 +157,11 @@ impl EventHandler for ConwaysGame {
         }
         if mouse::button_pressed(_ctx, mouse::MouseButton::Left) {
             let position = mouse::position(_ctx);
-            self.toggle_at_click([position.x, position.y]);
+            self.toggle_on_at_click([position.x, position.y]);
+        }
+        if mouse::button_pressed(_ctx, mouse::MouseButton::Right) {
+            let position = mouse::position(_ctx);
+            self.toggle_off_at_click([position.x, position.y]);
         }
         Ok(())
     }
