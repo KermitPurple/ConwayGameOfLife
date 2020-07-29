@@ -121,7 +121,7 @@ impl ConwaysGame {
                         ctx,
                         &rectangle,
                         graphics::DrawParam::default().dest(na::Point2::new(0.0, 0.0)),
-                        );
+                        ).unwrap();
                 }
             }
         }
@@ -163,7 +163,6 @@ impl EventHandler for ConwaysGame {
     fn draw(&mut self, ctx: &mut Context) -> GameResult {
         graphics::clear(ctx, graphics::WHITE);
         self.print_board(ctx);
-        graphics::present(ctx);
-        Ok(())
+        graphics::present(ctx)
     }
 }
